@@ -18,7 +18,7 @@ public class SecurityConfig {
 
         http.authorizeHttpRequests(
                ar -> ar
-                    .requestMatchers("/","/members/**","/items/**")// 요청 매처를 사용하여 요청을 매칭
+                    .requestMatchers("/","/members/**","/items/**","/image/**")// 요청 매처를 사용하여 요청을 매칭
                     .permitAll() // requestMatchers에 작성된 주소요청에대해 모두 허용 - 인증 노!
                     .anyRequest()  // 모든 요청에 대해
                     .authenticated() // 인증 해야 한다. - 로그인 해야함
