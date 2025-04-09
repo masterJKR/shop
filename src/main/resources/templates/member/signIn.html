@@ -5,55 +5,59 @@
       layout:decorate="~{fragment/default}">
 
 <head>
-  <th:block layout:fragment="css"></th:block>
-  <th:block layout:fragment="script"></th:block>
+  <th:block layout:fragment="css">
+      <style>
+         #main{
+            width:100%;
+            max-width:400px;
+            margin: 100px auto;
+        }
+        .error{ color:red; font-size:14px; }
+      </style>
+  </th:block>
+  <th:block layout:fragment="script">
+      <script>
+        $(function(){
+          $("input[name=userId]").on("keyup",btEnable);
+          $("input[name=password]").on("keyup",btEnable);
+        });
+        function btEnable(){
+          var id = $("input[name=userId]").val();
+          var pw = $("input[name=password]").val();
+          if( id != '' && pw != ''){
+              $("#loginBt").attr("disabled",false);
+          }else{
+              $("#loginBt").attr("disabled",true);
+          }
+        }
+
+      </script>
+
+  </th:block>
 </head>
 <div layout:fragment="main" id="main">
 
-  <form class="row g-3">
+  <form method="post" action="/members/signIn" class="row g-3">
     <div class="col-md-6">
-      <label for="inputEmail4" class="form-label">Email</label>
-      <input type="email" class="form-control" id="inputEmail4">
+      <label for="inputEmail4" class="form-label">아이디</label>
+      <input type="text" name="userId" class="form-control" id="inputEmail4">
     </div>
     <div class="col-md-6">
       <label for="inputPassword4" class="form-label">Password</label>
-      <input type="password" class="form-control" id="inputPassword4">
+      <input type="password" name="password" class="form-control" id="inputPassword4">
     </div>
+
+    <p th:if="${loginErrorMsg}" class="error mb-3" th:text="${loginErrorMsg}"></p>
+
     <div class="col-12">
-      <label for="inputAddress" class="form-label">Address</label>
-      <input type="text" class="form-control" id="inputAddress" placeholder="1234 Main St">
-    </div>
-    <div class="col-12">
-      <label for="inputAddress2" class="form-label">Address 2</label>
-      <input type="text" class="form-control" id="inputAddress2" placeholder="Apartment, studio, or floor">
-    </div>
-    <div class="col-md-6">
-      <label for="inputCity" class="form-label">City</label>
-      <input type="text" class="form-control" id="inputCity">
-    </div>
-    <div class="col-md-4">
-      <label for="inputState" class="form-label">State</label>
-      <select id="inputState" class="form-select">
-        <option selected>Choose...</option>
-        <option>...</option>
-      </select>
-    </div>
-    <div class="col-md-2">
-      <label for="inputZip" class="form-label">Zip</label>
-      <input type="text" class="form-control" id="inputZip">
-    </div>
-    <div class="col-12">
-      <div class="form-check">
-        <input class="form-check-input" type="checkbox" id="gridCheck">
-        <label class="form-check-label" for="gridCheck">
-          Check me out
-        </label>
-      </div>
-    </div>
-    <div class="col-12">
-      <button type="submit" class="btn btn-primary">Sign in</button>
+      <button type="submit" class="btn btn-primary" id="loginBt" disabled>Sign in</button>
     </div>
   </form>
+
+  <div class="btn-group mt-4" role="group" aria-label="Basic outlined example">
+    <button type="button" class="btn btn-outline-primary">아이디찾기</button>
+    <button type="button" class="btn btn-outline-primary">비밀번호찾기</button>
+  </div>
 
 </div>
 
