@@ -12,6 +12,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
 @EnableWebSecurity
@@ -26,8 +27,11 @@ public class SecurityConfig {
 
         http.authorizeHttpRequests(
                ar -> ar
-                    .requestMatchers("/","/error","/css/**","/members/**","/items/**","/image/**")// 요청 매처를 사용하여 요청을 매칭
+                    .requestMatchers("/","/members/**","/items/**","/image/**")// 요청 매처를 사용하여 요청을 매칭
                     .permitAll() // requestMatchers에 작성된 주소요청에대해 모두 허용 - 인증 노!
+                    .requestMatchers("/error","/css/**","/javascript/**")// 요청 매처를 사용하여 요청을 매칭
+                    .permitAll()
+                    .requestMatchers("/admin/**").hasRole("ADMIN")
                     .anyRequest()  // 모든 요청에 대해
                     .authenticated() // 인증 해야 한다. - 로그인 해야함
             )
@@ -40,16 +44,12 @@ public class SecurityConfig {
                     .permitAll()  // 로그인 페이지 에 대한 모두가 접근할수 있게 허용
             )
             .logout(out->out
-                    .logoutUrl("/logout") // 로그아웃 주소 설정
-                    .logoutSuccessUrl("/") // 로그아웃  성공시 이동할 주소
-                    .addLogoutHandler(
-                            (request, response, authentication) ->
-                            {
-                                HttpSession session = request.getSession();
-                                session.invalidate();
-                            }) // 로그아웃하면서  세션 무효화
-
+                    .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+                    .logoutSuccessUrl("/")
+                    .invalidateHttpSession(true)
             );
+
+
         http.csrf(
                 cr ->
                    cr.csrfTokenRepository(
