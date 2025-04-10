@@ -1,16 +1,24 @@
 package com.shop.config;
 
+import com.shop.service.MemberService;
 import jakarta.servlet.http.HttpSession;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
+
+    @Autowired
+    MemberService memberService;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
@@ -18,7 +26,7 @@ public class SecurityConfig {
 
         http.authorizeHttpRequests(
                ar -> ar
-                    .requestMatchers("/","/members/**","/items/**","/image/**")// 요청 매처를 사용하여 요청을 매칭
+                    .requestMatchers("/","/error","/css/**","/members/**","/items/**","/image/**")// 요청 매처를 사용하여 요청을 매칭
                     .permitAll() // requestMatchers에 작성된 주소요청에대해 모두 허용 - 인증 노!
                     .anyRequest()  // 모든 요청에 대해
                     .authenticated() // 인증 해야 한다. - 로그인 해야함
@@ -42,11 +50,17 @@ public class SecurityConfig {
                             }) // 로그아웃하면서  세션 무효화
 
             );
-
+        http.csrf(
+                cr ->
+                   cr.csrfTokenRepository(
+                       CookieCsrfTokenRepository.withHttpOnlyFalse()));
         //http.formLogin(Customizer.withDefaults());
 
         return http.build();
     }
 
-
+    @Bean
+    public PasswordEncoder passwordEncoder(){
+        return new BCryptPasswordEncoder();
+    }
 }
