@@ -10,6 +10,10 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 @Controller
 @RequestMapping("/admin")
@@ -32,12 +36,30 @@ public class AdminController {
     // 상품등록 form 데이터 전송 요청 - /admin/item/new
     @PostMapping("/item/new")
     public String itemSave(@Valid ItemForm itemForm ,
-                 BindingResult bindingResult, Model model){
+                           BindingResult bindingResult,
+                           @RequestParam("itemImgFile") List<MultipartFile> multipartFileList,
+                           Model model){
 
         if(bindingResult.hasErrors()){ // 필수입력값 을 작성하지 않은경우
             return "admin/itemForm";
         }
+        // 잘 입력했다면~~  테이블에 저장 되도록 해야겠지요??~
+        // 그런 데 말입니다.      이미지를 한장도 넣지 않았다면 말입니다.
+        //  저장 하면 안되요~~~  그래서 이미지 안 넣은 경우도~~ 해야 겠죠?~ 그쵸??? 대답해!
 
+        if(multipartFileList.get(0).isEmpty() && itemForm.getId() == null){
+            //이미지가 한장도 선택하지 않았다면, 무조건 한장 이상은 선택해야 한다.!!!
+            model.addAttribute("errorMessage", "첫번째 상품이미지는필수 등록입니다.");
+            return "admin/itemForm";
+        }
+        try {
+            // 테이블에 저장 하기 위해  service의 메서드를 호출한다.
+            itemAdminService.saveItem(itemForm, multipartFileList);
+        }catch(Exception e){
+            System.out.println("이미지 업로드 실패했다!! 코드 확인하거나, 경로 올바른지 확인");
+            model.addAttribute("errorMessage","상품 등록 중 에러가 발생");
+            return "admin/itemForm";
+        }
 
         return "redirect:/admin/item/new";
     }
