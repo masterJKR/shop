@@ -1,15 +1,21 @@
 package com.shop.service;
 
 import com.shop.dto.item.ItemForm;
+import com.shop.dto.item.ItemListDto;
+import com.shop.dto.item.ItemSearchDto;
 import com.shop.entity.Item;
 import com.shop.entity.ItemImage;
 import com.shop.repository.ItemImageRepo;
 import com.shop.repository.ItemRepo;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -45,5 +51,18 @@ public class ItemAdminService {
             itemImageAdminService.saveImg(itemImage, multipartFileList.get(i) );
         }
 
+    }
+
+    public Page<ItemListDto> getItemMng(ItemSearchDto itemSearchDto, Pageable pageable) {
+        List<Item> itemList = itemRepo.findAllByOrderByIdDesc(pageable);
+
+        List<ItemListDto> itemListDtos = new ArrayList<>();
+
+        for(Item item : itemList){
+            ItemImage itemImage = itemImageRepo.findByItemIdAndRepImgYn(item.getId(), "Y");
+            itemListDtos.add( ItemListDto.of(item, itemImage.getImgUrl()) );
+        }
+
+        return new PageImpl<>(itemListDtos , pageable, itemRepo.count() );
     }
 }

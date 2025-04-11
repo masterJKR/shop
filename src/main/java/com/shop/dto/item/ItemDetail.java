@@ -1,6 +1,7 @@
 package com.shop.dto.item;
 
 
+import com.shop.constant.ItemSellStatus;
 import com.shop.entity.Item;
 import lombok.Getter;
 import lombok.Setter;
@@ -14,6 +15,7 @@ public class ItemDetail {
     private Integer price;
     private Integer stockNumber;
     private String itemDetail;
+    private ItemSellStatus itemSellStatus;
 
     private List<ItemImgDto> itemImgDtoList;
 
@@ -21,6 +23,7 @@ public class ItemDetail {
     public static ItemDetail of(Item item, List<ItemImgDto> itemImgDtoList){
         ItemDetail itemDetail = new ItemDetail();
 
+        itemDetail.setItemSellStatus( item.getItemSellStatus() );
         itemDetail.setId( item.getId());
         itemDetail.setItemDetail(item.getItemDetail());
         itemDetail.setItemName( item.getItemName());

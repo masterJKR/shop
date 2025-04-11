@@ -12,6 +12,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
@@ -23,13 +24,15 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
+        HttpSessionRequestCache requestCache=new HttpSessionRequestCache();
+        requestCache.setMatchingRequestParameterName(null);
 
-
-        http.authorizeHttpRequests(
+        http.requestCache(rq->rq.requestCache(requestCache))
+                .authorizeHttpRequests(
                ar -> ar
                     .requestMatchers("/","/members/**","/items/**","/image/**")// 요청 매처를 사용하여 요청을 매칭
                     .permitAll() // requestMatchers에 작성된 주소요청에대해 모두 허용 - 인증 노!
-                    .requestMatchers("/error","/css/**","/javascript/**")// 요청 매처를 사용하여 요청을 매칭
+                    .requestMatchers("/itemImg/**","/error","/css/**","/javascript/**")// 요청 매처를 사용하여 요청을 매칭
                     .permitAll()
                     .requestMatchers("/admin/**").hasRole("ADMIN")
                     .anyRequest()  // 모든 요청에 대해
