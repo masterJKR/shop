@@ -9,6 +9,8 @@ import lombok.Getter;
 import lombok.Setter;
 import org.modelmapper.ModelMapper;
 
+import java.util.List;
+
 @Getter @Setter
 public class ItemForm {
     private Long id; // 상품 프라이머리키 id
@@ -28,6 +30,8 @@ public class ItemForm {
     private ItemSellStatus itemSellStatus;
 
     private Category category;
+
+    private List<ItemImgDto> itemImgDtoList;
 
     private static ModelMapper modelMapper = new ModelMapper();
 

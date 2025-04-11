@@ -6,6 +6,13 @@
 
 <th:block layout:fragment="css">
   <style>
+    #main{
+      width:700px;
+      margin:100px auto;
+    }
+    @media screen and (max-width:600px){
+      #main{ width:100%;}
+    }
     .fieldError{
       color:red;
     }
@@ -13,10 +20,14 @@
 </th:block>
 <th:block layout:fragment="script">
   <script th:src="@{/javascript/itemForm.js}"></script>
+  <script>
+    $(function(){  bindImg();  });
+  </script>
+
 </th:block>
 
 <div layout:fragment="main" id="main">
-  <form role="form" method="post" enctype="multipart/form-data" th:object="${itemFormDto}">
+  <form role="form" method="post" enctype="multipart/form-data" th:object="${itemForm}">
     <input type="hidden" th:field="*{id}">
     <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
     <p class="h2">상품 등록</p>
@@ -27,12 +38,21 @@
         <option value="SOLD_OUT">품절</option>
       </select>
     </div>
+    <div class="form-group mb-3">
+      <select class="form-select" th:field="*{category}">
+        <option value="SINBAL">신발</option>
+        <option value="PANTY">빤쓰</option>
+        <option value="MERIYAS">난닝구</option>
+        <option value="VAJI">바지</option>
+        <option value="T">티</option>
+      </select>
+    </div>
 
     <div class="input-group mb-3">
       <span class="input-group-text">상품명</span>
-      <input type="text" class="form-control" th:field="*{itemNm}" placeholder="상품명을 입력하세요" >
+      <input type="text" class="form-control" th:field="*{itemName}" placeholder="상품명을 입력하세요" >
     </div>
-    <p th:if="${#fields.hasErrors('itemNm')}" th:errors="*{itemNm}" class="fieldError"></p>
+    <p th:if="${#fields.hasErrors('itemName')}" th:errors="*{itemName}" class="fieldError"></p>
 
 
     <div class="input-group mb-3">
@@ -55,7 +75,7 @@
     <p th:if="${#fields.hasErrors('itemDetail')}" th:errors="*{itemDetail}" class="fieldError"></p>
 
 
-    <div th:if="${#lists.isEmpty(itemFormDto.itemImgDtoList) }">
+    <div th:if="${#lists.isEmpty(itemForm.itemImgDtoList) }">
       <div class="input-group mb-3" th:each="num : ${#numbers.sequence(1,5)}">
         <label class="input-group-text"  th:text="이미지+${num}"></label>
         <input type="file" class="form-control cs-file-input" name="itemImgFile">
@@ -63,12 +83,12 @@
       </div>
     </div>
 
-    <div th:if="${#strings.isEmpty(itemFormDto.id)}" class="text-center">
+    <div th:if="${#strings.isEmpty(itemForm.id)}" class="text-center">
       <button th:formaction="@{/admin/item/new}" class="btn btn-success">저장</button>
     </div>
 
-    <div th:unless="${#strings.isEmpty(itemFormDto.id)}" class="text-center">
-      <button th:formaction="@{ '/admin/item/'+${itemFormDto.id} }" class="btn btn-success">수정</button>
+    <div th:unless="${#strings.isEmpty(itemForm.id)}" class="text-center">
+      <button th:formaction="@{ '/admin/item/'+${itemForm.id} }" class="btn btn-success">수정</button>
     </div>
 
   </form>
