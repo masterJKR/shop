@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragment/default}">
+
+<th:block layout:fragment="css">
+  <link rel="stylesheet" href="/css/itemList.css">
+</th:block>
+<th:block layout:fragment="script"></th:block>
+
+<div layout:fragment="main" id="main">
+
+  <div id="gContainer">
+
+    <div th:each="item , stat : ${itemListDtos}" class="g-item item-big"
+         th:classappend="${'item'+stat.count}">
+        <div class="g-card">
+          <div class="g-card-box">
+            <a th:href="@{ '/items/detail/'+ ${item.id} }">
+              <div th:style=" 'padding-top:75%; background:url('+ ${item.imgUrl}+ ')
+              no-repeat center; background-size:cover; ' ">
+              </div>
+              <div class="g-card-body">
+                <h3 class="g-card-itemName" th:text="${item.itemName}"></h3>
+                <p class="g-card-price"
+                   th:text="${#numbers.formatCurrency(item.price) +'원' }"></p>
+              </div>
+            </a>
+          </div>
+        </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+</html>

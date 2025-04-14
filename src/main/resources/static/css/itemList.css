@@ -1,0 +1,44 @@
+/*  itemList.css */
+
+#main{ width:100%; margin:50px 0;}
+
+#gContainer{
+    display:grid;
+    width:100%;
+    gap:10px;
+    grid-template-columns:repeat(5,1fr);
+    grid-template-rows:auto;
+}
+.g-item{
+    overflow:hidden;
+}
+.g-card-box{
+    padding:2px;
+}
+.g-card-box a{
+    display:block;
+    text-decoration:none;
+    color:inherit;
+}
+.g-card-box a:hover{ text-decoration: underline; }
+.g-card-body { padding:10px 20px; }
+.g-card-price { color:orangered; }
+
+@media screen and (max-width:1200px){
+    #gContainer{
+        grid-template-columns:repeat(3, 1fr);
+    }
+}
+
+@media screen and (max-width:700px){
+#gContainer{
+        grid-template-columns:repeat(2, 1fr);
+    }
+}
+@media screen and (max-width:500px){
+#gContainer{
+        grid-template-columns:repeat(1, 1fr);
+    }
+}
+
+

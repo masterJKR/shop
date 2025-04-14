@@ -1,5 +1,6 @@
 package com.shop.repository;
 
+import com.shop.constant.Category;
 import com.shop.entity.Item;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -11,4 +12,6 @@ import java.util.List;
 public interface ItemRepo extends JpaRepository<Item,Long> {
 
     List<Item> findAllByOrderByIdDesc(Pageable pageable);
+
+    List<Item> findAllByCategory(Category menu);
 }
