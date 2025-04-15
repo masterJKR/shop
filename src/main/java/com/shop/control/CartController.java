@@ -44,7 +44,7 @@ public class CartController {
                 return new ResponseEntity<String>( e.getMessage() ,HttpStatus.BAD_REQUEST);
             }
 
-            return new ResponseEntity<String>("success", HttpStatus.OK);
+            return new ResponseEntity<Long>(1L, HttpStatus.OK);
     }
 
 }
