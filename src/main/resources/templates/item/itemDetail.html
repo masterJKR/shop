@@ -32,8 +32,51 @@
             var token = $("meta[name='_csrf']").attr("content");
             var header = $("meta[name='_csrf_header']").attr("content");
 
-            var url="/cart/add";
+// 데이터를 json으로 보내려면
+// 1. 서버에 요청할 주소 필요
+// 2. 데이터를 객체화  및 json 변환
+// 3. xml을 통해 json 전달
+// 4. 시큐리티 사용시에는 csrf 포함 하여 전달
 
+            var url="/cart/add";
+            // 상품의 id( primary key )  , 수량
+            var paramData = {   // 데이터를 객체화
+                itemId : parseInt($("#itemId").val()) ,
+                count : parseInt($("#count").val())
+             };
+
+             // 객체를 json으로변환
+             var param = JSON.stringify(paramData);
+             // {  "itemId" : 10 ,  "count" : 4 }  -> json의 모습
+
+
+             $.ajax( {
+                    url : url,
+                    type : "POST",
+                    contentType : "application/json",
+                    data : param,
+                    dataType : "json",
+                    cache : false,
+                    beforeSend : function(xhr){
+                        xhr.setRequestHeader( header , token ); // 전송전에 헤더에 csrf 설정
+                    },
+                    success : function(result , status){
+                        alert("상품을 장바구니에 담았습니다.");
+                        // 장바구니에 담기 성공해서 다른 페이지로 이동하려면
+                        //  location.href = "이동할 주소";
+                    },
+                    error : function(jqXHR , status, error ) {
+                        if( jqXHR.status == "200" ) {
+                            alert("로그인을 먼저 해주세요");
+                            alert(status);
+                            alert( jqXHR.responseText );
+                            location.href="/signIn";
+                        }else{ // 로그인 했는데도 실패라면
+                            alert( jqXHR.responseText );
+                        }
+                    }
+
+              } );
         }
 
 
