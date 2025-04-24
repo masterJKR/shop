@@ -33,6 +33,12 @@ public class Item {
 
     @Enumerated(EnumType.STRING)
     private Category category; // 상품 종류
+
+    public void removeStock(int count) {
+    }
+
+    public void addStock(int count) {
+    }
 }
 
 

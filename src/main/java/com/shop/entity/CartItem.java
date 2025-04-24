@@ -30,4 +30,8 @@ public class CartItem {
         cartItem.setCount(count);
         return cartItem;
     }
+
+    public void updateCount(int count) {
+        this.count = count;
+    }
 }
